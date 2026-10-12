@@ -11,7 +11,16 @@ class Account(abc.ABC):
     @abc.abstractmethod
     def withdraw(self, value: float) -> float: ...
 
+    def _validate_amount(self, value: float, operation: str) -> bool:
+        if value <= 0:
+            print(f'Impossible to {operation} a non-positive value')
+            return False
+        return True
+
     def deposit(self, value: float) -> float:
+        if not self._validate_amount(value, 'deposit'):
+            return self.balance
+
         self.balance += value
         self.details(f'(DEPOSIT {value})')
         return self.balance
@@ -23,6 +32,9 @@ class Account(abc.ABC):
 @dataclass
 class SavingsAcount(Account):
     def withdraw(self, value):
+        if not self._validate_amount(value, 'withdraw'):
+            return self.balance
+
         value_after_withdraw = self.balance - value
 
         if value_after_withdraw >= 0:
@@ -39,6 +51,9 @@ class CheckingAccount(Account):
     limit : float = 0
 
     def withdraw(self, value: float) -> float:
+        if not self._validate_amount(value, 'withdraw'):
+            return self.balance
+
         value_after_withdraw = self.balance - value
         max_limit = -self.limit
 
