@@ -10,7 +10,7 @@ class Bank:
 
 
     def check_account(self,account):
-        if account in self.accounts:
+        if any(existing_account is account for existing_account in self.accounts):
             print("account checked")
             return True
         print(f"account: {account.account} recused")
@@ -24,14 +24,14 @@ class Bank:
         return False
     
     def check_client(self,client):
-        if client in self.clients:
+        if any(existing_client is client for existing_client in self.clients):
             print(f"client checked")
             return True
         print(f"client named {client.name} recused")
         return False
     
     def check_client_account(self, client, account):
-        if account == client.account:
+        if account is client.account:
             print(f"account : {account.account} is from {client.name}")
             return True
         print(f"account : {account.account} is not from {client.name}")
